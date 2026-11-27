@@ -1,0 +1,30 @@
+{
+  "name": "biblioteca-digital",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "shared",
+    "api",
+    "frontend"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace shared && npm run build --workspace api && npm run build --workspace frontend",
+    "dev": "concurrently -k \"npm run dev --workspace api\" \"npm run dev --workspace frontend\"",
+    "predev": "npm run build --workspace shared",
+    "db:generate": "npm run prisma:generate --workspace api",
+    "db:migrate": "npm run prisma:migrate --workspace api",
+    "db:seed": "npm run prisma:seed --workspace api"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "allowScripts": {
+    "@prisma/client@6.19.0": true,
+    "prisma@6.19.0": true,
+    "@prisma/engines@6.19.0": true,
+    "esbuild@0.28.2": true
+  }
+}

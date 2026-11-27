@@ -1,0 +1,24 @@
+import express from "express";
+import cors from "cors";
+import swaggerUi from "swagger-ui-express";
+import { swaggerDocument } from "./docs/swagger";
+import { authenticate } from "./middlewares/authenticate";
+import { errorHandler } from "./middlewares/errorHandler";
+import authRoutes from "./routes/authRoutes";
+import authorRoutes from "./routes/authorRoutes";
+import bookRoutes from "./routes/bookRoutes";
+import readerRoutes from "./routes/readerRoutes";
+import loanRoutes from "./routes/loanRoutes";
+
+export const app = express();
+app.use(cors({ origin: "http://localhost:5173" }));
+app.use(express.json());
+app.get("/health", (_req, res) => res.json({ status: "ok", application: "Biblioteca Digital API" }));
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api/auth", authRoutes);
+app.use("/api/autores", authenticate, authorRoutes);
+app.use("/api/livros", authenticate, bookRoutes);
+app.use("/api/leitores", authenticate, readerRoutes);
+app.use("/api/emprestimos", authenticate, loanRoutes);
+app.use((_req, res) => res.status(404).json({ message: "Rota não encontrada." }));
+app.use(errorHandler);
