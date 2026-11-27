@@ -146,7 +146,3 @@ biblioteca-digital/
 ├── docker-compose.yml
 └── README.md
 ```
-
-## Observações da entrega
-
-Este projeto foi preparado para entrega individual. O vídeo obrigatório não foi produzido. Antes de enviar, preencha o RGM acima e confira o prazo e o formato de envio no Blackboard.
