@@ -1,45 +1,63 @@
 # Biblioteca Digital
 
-**Projeto final — Desenvolvimento Web (A2)**
+Projeto feito para a atividade de Desenvolvimento Web (A2). A ideia é ter um sistema simples para organizar as informações de uma biblioteca, como livros, autores, leitores e empréstimos.
 
 ## Integrante
 
-- Lucas Teves Dalia Morais — RGM:42783062
+- Lucas Teves Dalia Morais — RGM: 42783062
 
-## Tema e tabelas
+## Sobre o projeto
 
-Sistema web para gerenciamento de uma biblioteca. O projeto possui quatro tabelas principais e uma tabela separada para autenticação:
+O sistema permite cadastrar e consultar os dados de uma biblioteca. Também tem uma parte de login para que o acesso às telas fique protegido.
 
-| Tabela | Campos principais | Relacionamentos |
-|---|---|---|
-| Autor | nome, e-mail, biografia | Um autor pode ter vários livros |
-| Livro | título, ISBN, ano de publicação, autorId | Cada livro pertence a um autor |
-| Leitor | nome, CPF, e-mail, telefone | Um leitor pode ter vários empréstimos |
-| Empréstimo | livroId, leitorId, data do empréstimo, devolução prevista e data de devolução | Cada empréstimo pertence a um livro e a um leitor |
-| Usuário | nome, e-mail, senhaHash | Usada somente para cadastro e login |
+No banco de dados, foram criadas as seguintes tabelas:
 
-Os campos `email` de Autor e Usuário, `isbn` de Livro, e `cpf`/`email` de Leitor são únicos. A senha da tabela Usuário é armazenada somente como hash bcrypt.
+| Tabela | O que guarda |
+|---|---|
+| Autor | Nome, e-mail e biografia dos autores |
+| Livro | Título, ISBN, ano de publicação e autor relacionado |
+| Leitor | Nome, CPF, e-mail e telefone |
+| Empréstimo | Livro, leitor, data do empréstimo e datas de devolução |
+| Usuário | Dados usados para cadastro e login |
 
-## Tecnologias
+Um autor pode ter vários livros, e um leitor pode ter vários empréstimos. Cada empréstimo fica relacionado a um livro e a um leitor.
 
-- PostgreSQL e Docker Compose
-- Prisma ORM
-- Node.js, Express e TypeScript
-- Zod em `shared`, consumido pela API e pelo frontend
-- React, Vite e TypeScript
-- Axios
-- bcryptjs para hash de senhas
-- Swagger UI em `/docs`
+## Tecnologias utilizadas
 
-## Requisitos
+- React e Vite na parte visual do sistema.
+- Node.js, Express e TypeScript na API.
+- PostgreSQL para guardar os dados.
+- Prisma para trabalhar com o banco de dados.
+- Zod para validar os dados.
+- Axios para fazer as chamadas entre o frontend e a API.
+- bcryptjs para proteger as senhas.
+- Docker Compose para iniciar o banco de dados.
+- Swagger para consultar e testar as rotas da API.
 
-- Node.js 20.19 ou superior (recomendado Node 22 LTS)
-- npm 10 ou superior
-- Docker Desktop com Docker Compose
+## O que o sistema faz
 
-## Como executar do zero
+- Permite criar uma conta e fazer login.
+- Cadastra, edita, lista e remove autores.
+- Cadastra, edita, lista e remove livros.
+- Cadastra, edita, lista e remove leitores.
+- Cadastra, edita, lista e remove empréstimos.
+- Permite escolher o autor ao cadastrar um livro.
+- Permite escolher o livro e o leitor ao cadastrar um empréstimo.
+- Mostra o nome do livro e do leitor na lista de empréstimos.
+- Tem busca nas listagens.
+- Faz validação dos dados no frontend e também na API.
 
-Execute os comandos na pasta raiz do projeto.
+## O que é necessário para executar
+
+Antes de iniciar, é preciso ter instalado:
+
+- Node.js 20.19 ou superior (recomendado Node 22 LTS).
+- npm 10 ou superior.
+- Docker Desktop com Docker Compose.
+
+## Como rodar o projeto
+
+Os comandos abaixo devem ser executados na pasta principal do projeto.
 
 ### 1. Instalar as dependências
 
@@ -47,33 +65,33 @@ Execute os comandos na pasta raiz do projeto.
 npm install
 ```
 
-### 2. Configurar as variáveis da API
+### 2. Criar o arquivo de configuração da API
 
-Crie uma cópia de `api/.env.example` com o nome `api/.env`.
+Faça uma cópia do arquivo `api/.env.example` e salve com o nome `api/.env`.
 
-No Windows PowerShell:
+No PowerShell do Windows:
 
 ```powershell
 Copy-Item api/.env.example api/.env
 ```
 
-No Linux/macOS:
+No Linux ou macOS:
 
 ```bash
 cp api/.env.example api/.env
 ```
 
-O arquivo `.env` real não deve ser enviado ao GitHub.
+O arquivo `api/.env` contém configurações locais e não deve ser enviado para o GitHub.
 
-### 3. Subir o PostgreSQL
+### 3. Iniciar o banco de dados
 
 ```bash
 docker compose up -d
 ```
 
-Aguarde o container `biblioteca-postgres` ficar saudável. O banco criado chama-se `biblioteca`.
+O banco utilizado pelo projeto se chama `biblioteca`.
 
-### 4. Gerar o Prisma Client, aplicar as migrations e inserir os dados
+### 4. Preparar o banco e os dados iniciais
 
 ```bash
 npm run db:generate
@@ -81,68 +99,59 @@ npm run db:migrate
 npm run db:seed
 ```
 
-A migration inicial já está versionada em `api/prisma/migrations`. O comando `db:migrate` usa `prisma migrate dev` para aplicar as migrations e manter o histórico local.
+Esses comandos geram o Prisma Client, aplicam as migrations e adicionam alguns dados de exemplo.
 
-### 5. Iniciar API e frontend
+### 5. Iniciar o sistema
 
 ```bash
 npm run dev
 ```
 
+Depois de iniciar, os endereços são:
+
 - Frontend: http://localhost:5173
 - API: http://localhost:3333
-- Swagger: http://localhost:3333/docs
+- Documentação da API (Swagger): http://localhost:3333/docs
 - Verificação da API: http://localhost:3333/health
 
-Para encerrar, use `Ctrl + C`. O banco pode continuar ativo; para desligá-lo:
+Para parar a execução, use `Ctrl + C`. Para desligar o banco de dados:
 
 ```bash
 docker compose down
 ```
 
-Para apagar também os dados persistidos localmente (operação irreversível):
+Se também quiser apagar os dados salvos no banco local, use:
 
 ```bash
 docker compose down -v
 ```
 
-## Acesso de demonstração
+Atenção: esse último comando apaga os dados persistidos localmente.
 
-- **E-mail:** `admin@biblioteca.com`
-- **Senha:** `Biblioteca@123`
+## Conta para demonstração
 
-O seed cria também autores, livros, leitores e um empréstimo de exemplo. O cadastro pela tela cria novos usuários.
+- E-mail: `admin@biblioteca.com`
+- Senha: `Biblioteca@123`
 
-## Funcionalidades
+O banco também recebe alguns autores, livros, leitores e um empréstimo de exemplo quando o seed é executado.
 
-- Cadastro e login de usuário.
-- CRUD de autores, livros, leitores e empréstimos.
-- Select de autor no formulário de livro.
-- Select de livro e leitor no formulário de empréstimo.
-- Listagem de empréstimos com os nomes do livro e do leitor.
-- Busca por texto nas listas.
-- Validação no frontend e na API usando os mesmos schemas do pacote `shared`.
-- Mensagens de validação e de valores únicos exibidas na interface.
-- Rotas protegidas por token JWT depois do login.
+## Compilação
 
-## Builds exigidos
-
-Na raiz do projeto, execute:
+Para compilar o projeto, execute na pasta principal:
 
 ```bash
-npm run build --workspace api
-npm run build --workspace frontend
+npm run build
 ```
 
-O primeiro comando compila a API. O segundo compila o frontend. Para garantir que o pacote compartilhado esteja compilado, execute antes `npm run build --workspace shared` ou rode `npm run build` na raiz, que compila os três pacotes na ordem correta.
+Esse comando compila os pacotes compartilhado, API e frontend.
 
-## Organização do repositório
+## Pastas principais
 
 ```text
 biblioteca-digital/
-├── shared/       # Schemas Zod compartilhados
-├── api/          # Express, Prisma, autenticação e Swagger
-├── frontend/     # React, Vite, Axios e telas
+├── shared/       # Validações compartilhadas
+├── api/          # API, banco de dados e autenticação
+├── frontend/     # Telas do sistema
 ├── docker-compose.yml
 └── README.md
 ```
